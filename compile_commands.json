@@ -1,0 +1,25 @@
+[
+    {
+        "arguments": [
+            "cc",
+            "-c",
+            "-Isrc/washd@exe",
+            "-Isrc",
+            "-I../src",
+            "-Iinclude",
+            "-I../include",
+            "-fdiagnostics-color=always",
+            "-pipe",
+            "-D_FILE_OFFSET_BITS=64",
+            "-Wall",
+            "-Winvalid-pch",
+            "-O0",
+            "-g",
+            "-o",
+            "src/washd@exe/main.c.o",
+            "../src/main.c"
+        ],
+        "directory": "/home/delusional/Documents/washdc/src",
+        "file": "main.c"
+    }
+]
