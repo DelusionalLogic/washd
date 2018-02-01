@@ -5,11 +5,10 @@ project(
 	default_options : [
 	]
 )
-inc = include_directories('include')
 
 thread_dep = dependency('threads')
 
-subdir('include')
+subdir('shared')
 subdir('washd')
 subdir('washc')
 subdir('test')

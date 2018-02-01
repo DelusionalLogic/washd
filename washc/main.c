@@ -5,82 +5,32 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <unistd.h>
+#include <stdbool.h>
 
-#define SOCKET_NAME "socket"
-#define BUFFER_SIZE 12
+#include "myerror.h"
+#include "logger.h"
+#include "gdbus/dbus.h"
 
 int main(int argc, char *argv[])
 {
-	struct sockaddr_un addr;
-	int i;
-	int ret;
-	int data_socket;
-	char buffer[BUFFER_SIZE];
+	error_init();
+	GMainLoop* loop;
+	
+	loop = g_main_loop_new(NULL, false);
 
-	/* Create local socket. */
+	dbusWashdWasher* washer = dbus_washd_washer_proxy_new_for_bus_sync(
+			G_BUS_TYPE_SESSION,
+			G_DBUS_PROXY_FLAGS_NONE,
+			"dk.slashwin.washd",
+			"/dk/slashwin/washd/washers/1",
+			NULL,
+			NULL
+			);
 
-	data_socket = socket(AF_UNIX, SOCK_SEQPACKET, 0);
-	if (data_socket == -1) {
-		perror("socket");
-		exit(EXIT_FAILURE);
-	}
+	log_write(LEVEL_INFO, "test %ld", dbus_washd_washer_get_next_time(washer));
+	g_main_loop_run(loop);
 
-	/*
-	 * For portability clear the whole structure, since some
-	 * implementations have additional (nonstandard) fields in
-	 * the structure.
-	 */
+	g_main_loop_quit(loop);
 
-	memset(&addr, 0, sizeof(struct sockaddr_un));
-
-	/* Connect socket to socket address */
-
-	addr.sun_family = AF_UNIX;
-	strncpy(addr.sun_path, SOCKET_NAME, sizeof(addr.sun_path) - 1);
-
-	ret = connect (data_socket, (const struct sockaddr *) &addr,
-			sizeof(struct sockaddr_un));
-	if (ret == -1) {
-		fprintf(stderr, "The server is down.\n");
-		exit(EXIT_FAILURE);
-	}
-
-	/* Send arguments. */
-
-	for (i = 1; i < argc; ++i) {
-		ret = write(data_socket, argv[i], strlen(argv[i]) + 1);
-		if (ret == -1) {
-			perror("write");
-			break;
-		}
-	}
-
-	/* Request result. */
-
-	strcpy (buffer, "DOWN");
-	ret = write(data_socket, buffer, strlen(buffer) + 1);
-	if (ret == -1) {
-		perror("write");
-		exit(EXIT_FAILURE);
-	}
-
-	/* Receive result. */
-
-	ret = read(data_socket, buffer, BUFFER_SIZE);
-	if (ret == -1) {
-		perror("read");
-		exit(EXIT_FAILURE);
-	}
-
-	/* Ensure buffer is 0-terminated. */
-
-	buffer[BUFFER_SIZE - 1] = 0;
-
-	printf("Result = %s\n", buffer);
-
-	/* Close socket. */
-
-	close(data_socket);
-
-	exit(EXIT_SUCCESS);
+	return 0;
 }
