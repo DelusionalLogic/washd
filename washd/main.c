@@ -205,6 +205,7 @@ static int testfun(gpointer userdata) {
 
 					tm->tm_hour = whiz->status_extra_struct.time.hour;
 					tm->tm_min = whiz->status_extra_struct.time.minute;
+					tm->tm_sec = 0;
 
 					washer->nextEvent.time = mktime(tm);
 					washer->nextEvent.status = STATUS_CLOSED;
@@ -219,6 +220,7 @@ static int testfun(gpointer userdata) {
 
 					tm->tm_hour = whiz->status_extra_struct.time.hour;
 					tm->tm_min = whiz->status_extra_struct.time.minute;
+					tm->tm_sec = 0;
 
 					washer->nextEvent.time = mktime(tm);
 					washer->nextEvent.status = STATUS_FREE;
@@ -233,6 +235,7 @@ static int testfun(gpointer userdata) {
 
 					tm->tm_hour += whiz->status_extra_struct.time.hour;
 					tm->tm_min += whiz->status_extra_struct.time.minute;
+					tm->tm_sec = 0;
 
 					washer->nextEvent.time = mktime(tm);
 					washer->nextEvent.status = STATUS_FREE;
@@ -325,7 +328,7 @@ static void on_bus_aquired(GDBusConnection* conn, const gchar* name, gpointer us
 
 	/* guint timer_id = */
 	g_timeout_add_seconds(
-		10,
+		600,
 		testfun,
 		userdata
 	);

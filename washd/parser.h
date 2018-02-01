@@ -3,6 +3,7 @@
 #include <myhtml/api.h>
 
 #include "vector.h"
+#include "types.h"
 
 struct time {
 	uint8_t hour;
@@ -19,12 +20,6 @@ struct ParsedStatusExtra {
 	enum ExtraType type;
 	struct time time;
 	char* lastUser;
-};
-
-enum Status {
-	STATUS_FREE = 1,
-	STATUS_INUSE,
-	STATUS_CLOSED,
 };
 
 // @NAMING: What is this generic facility thing?

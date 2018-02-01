@@ -135,8 +135,8 @@ void parseElements(Vector* elements) {
 			whiz->status_extra_struct.type = ET_CLOSES;
 			// @INCOMPLETE: We don't parse this yet
 			whiz->status_extra_struct.lastUser = "";
-		} else if(strstr(whiz->status_extra_str, "Lukket indtil kl. ") == whiz->status_extra_str) {
-			whiz->status_extra_struct.time = parseTime(whiz->status_extra_str + 18);
+		} else if(strstr(whiz->status_extra_str, "Lukket indtil i morgen kl. ") == whiz->status_extra_str) {
+			whiz->status_extra_struct.time = parseTime(whiz->status_extra_str + 27);
 			whiz->status_extra_struct.type = ET_OPENS;
 			// @INCOMPLETE: We don't parse this yet
 			whiz->status_extra_struct.lastUser = "";
